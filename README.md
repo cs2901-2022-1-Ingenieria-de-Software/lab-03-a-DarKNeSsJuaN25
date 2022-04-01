@@ -16,6 +16,19 @@ Un tip es si su codigo responde:
 - Podria aplicar SOLID ? 
 
 Recordar: para correr la app mvn exec:java
+--RESPUESTA-----
+
+-El codigo inicialmente responde. Sin embargo, la implementacion usada no es la adecuada, presentandose code smells que se explicaran en el siguiente punto.
+
+-En primer lugar, el duplicado de codigo en el uso de metodos de las clases. Por ejemplo, en el metodo calculateTotaFor...(), se escribe unas condicionales que ya estan implementadas en el metodo calculateTaxes(). Esto tambiene esta presente en el metodo de calculateTotal(), donde se tienen dos for que realizan la misma accion, solo que con "inputs" diferentes. 
+
+Si se podria aplicar SOLID, pero con un cambio de los metodos y clases.
+Despues de los cambios, quedaria asi:
+-Cada metodo cumple una unica funcion (S)
+-No importa que pais o taxes ingresen, la funcion no se alterara (O)
+-No existen subclases (L)
+-No existe interfaz con implementacion forzada de metodos (I)
+-Los modulos de alto nivel no dependen de los de bajo nivel (D) 
 
 # Ejercicio 2: Agregar Pruebas Unitarias ( JUnits )
 
