@@ -7,16 +7,26 @@ public class ManageDemand {
     private Tax tax;
     private double Quantity;
     private double Taxes;
+    private List<Order> orders;
     public ManageDemand(Tax tax) {
         this.tax = tax;
+        this.Quantity = 0;
+        this.Taxes = 0;
     }
 
     public double calculateTotal(List<Order> orders){
-       
+        if(this.orders == null){
+            this.orders = orders;
+        }
+        for(Order order:orders){
+            order.setTax();
+        }
+        calculate_taxes();
+        calculateQuantities();
         return this.Quantity * this.Taxes;
     }
 
-    public void calculate_taxes(List <Order> orders){
+    public void calculate_taxes(){
         double sum = 0.0;
         for(Order order:orders){
             double res = order.getTax();
@@ -24,7 +34,7 @@ public class ManageDemand {
         }
         this.Taxes = sum;
     }
-    public void calculateQuantities(List <Order> orders) {
+    public void calculateQuantities() {
         double quantities = 0.0;
         for (Order order : orders) {
             double temp = order.getQuantity();
@@ -35,26 +45,26 @@ public class ManageDemand {
 
     public double calculateTotalForWithAdditionalByCountry(List<Order> orders, double defaultAdditionalColombia, double defaultAdditionalPeru, double defaultAdditionalBrazil){
         // Calculate additionals by country
-        double taxes = 0.0;
+        if(this.orders == null){
+            this.orders = orders;
+        }
         for (Order order : orders) {
-            String currCountry = order.getCountry();
-            if (currCountry.equals("PE")) {
-                taxes += defaultAdditionalPeru;
-            } else if (currCountry.equals("BR")) {
-                taxes += defaultAdditionalBrazil;
-            } else {
-                taxes += defaultAdditionalColombia;
+            if(order.getTax() == 0.0){
+                order.setTax(defaultAdditionalColombia);
+                this.Taxes += defaultAdditionalColombia;
+            }
+            else if(order.getTax() == 0.18){
+                order.setTax(defaultAdditionalPeru);
+                this.Taxes -= 0.18;
+                this.Taxes += defaultAdditionalPeru;
+            }
+            else if(order.getTax() == 0.12){
+                this.Taxes -=0.12;
+                this.Taxes += defaultAdditionalBrazil;
+                order.setTax(defaultAdditionalBrazil);
             }
         }
-
-        // Calculate Total
-        double quantities = 0.0;
-        for (Order order : orders) {
-            double temp = order.getQuantity();
-            quantities += temp;
-        }
-
-        return quantities * taxes;
+        return this.Quantity * this.Taxes;
     }
 
 }

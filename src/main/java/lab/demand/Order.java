@@ -36,5 +36,8 @@ public class Order {
             this.tax = 0.0;
         }
     }
-            
+    
+    public void setTax(double tax){
+        this.tax = tax;
+    }       
 }
