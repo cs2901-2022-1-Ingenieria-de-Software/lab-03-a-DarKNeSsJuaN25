@@ -36,8 +36,22 @@ public class Order {
             this.tax = 0.0;
         }
     }
-    
+
     public void setTax(double tax){
         this.tax = tax;
     }       
+    public void setTax(double co, double pe, double br){
+        if(country == "CO"){
+            this.tax = co;
+        }
+        else if(country == "PE"){
+            this.tax = pe;
+        }
+        else if(country == "BR"){
+            this.tax = br;
+        }
+        else{
+            this.tax = 0.0;
+        }
+    }
 }

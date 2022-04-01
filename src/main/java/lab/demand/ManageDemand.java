@@ -7,49 +7,43 @@ public class ManageDemand {
     private Tax tax;
     private double Quantity;
     private double Taxes;
-    private List<Order> orders;
     public ManageDemand(Tax tax) {
         this.tax = tax;
         this.Quantity = 0;
         this.Taxes = 0;
     }
+    public double getQuantity(){
+        return this.Quantity;
+    }
+    public double getTax(){
+        return this.Taxes;
+    }
 
     public double calculateTotal(List<Order> orders){
-        if(this.orders == null){
-            this.orders = orders;
-        }
+        double sum1=0.0,sum2=0.0;
         for(Order order:orders){
             order.setTax();
+            sum1 += order.getTax();
+            sum2 += order.getQuantity();
         }
-        calculate_taxes();
-        calculateQuantities();
+        this.Quantity = sum2;
+        this.Taxes = sum1;
         return this.Quantity * this.Taxes;
-    }
-
-    public void calculate_taxes(){
-        double sum = 0.0;
-        for(Order order:orders){
-            double res = order.getTax();
-            sum += res;
-        }
-        this.Taxes = sum;
-    }
-    public void calculateQuantities() {
-        double quantities = 0.0;
-        for (Order order : orders) {
-            double temp = order.getQuantity();
-            quantities += temp;
-        }
-        this.Quantity = quantities;
     }
 
     public double calculateTotalForWithAdditionalByCountry(List<Order> orders, double defaultAdditionalColombia, double defaultAdditionalPeru, double defaultAdditionalBrazil){
         // Calculate additionals by country
-        if(this.orders == null){
-            this.orders = orders;
+        boolean verify = false;
+        if(this.Taxes == 0){
+            verify = true;
         }
         for (Order order : orders) {
-            if(order.getTax() == 0.0){
+            if(verify){
+                order.setTax(defaultAdditionalColombia,defaultAdditionalPeru,defaultAdditionalBrazil);
+                this.Taxes += order.getTax();
+                this.Quantity += order.getQuantity();
+            }
+            else if(order.getTax() == 0.0){
                 order.setTax(defaultAdditionalColombia);
                 this.Taxes += defaultAdditionalColombia;
             }
